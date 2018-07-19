@@ -1,7 +1,7 @@
 function flag = matRad_IpoptIterFunc(iter,objective,~,~)
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % matRad IPOPT callback: iter function
-% 
+%
 % call
 %   Flag = matRad_IpoptIterFunc(iter,objective,parameter,maxiter,figureWait)
 %
@@ -22,13 +22,13 @@ function flag = matRad_IpoptIterFunc(iter,objective,~,~)
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% Copyright 2015 the matRad development team. 
-% 
-% This file is part of the matRad project. It is subject to the license 
-% terms in the LICENSE file found in the top-level directory of this 
-% distribution and at https://github.com/e0404/matRad/LICENSES.txt. No part 
-% of the matRad project, including this file, may be copied, modified, 
-% propagated, or distributed except according to the terms contained in the 
+% Copyright 2015 the matRad development team.
+%
+% This file is part of the matRad project. It is subject to the license
+% terms in the LICENSE file found in the top-level directory of this
+% distribution and at https://github.com/e0404/matRad/LICENSES.txt. No part
+% of the matRad project, including this file, may be copied, modified,
+% propagated, or distributed except according to the terms contained in the
 % LICENSE file.
 %
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -46,36 +46,36 @@ else
     flag = true;
 end
 
-% plot objective function output
-figHandles = get(0,'Children');
-if ~isempty(figHandles)
-    IdxHandle = strcmp(get(figHandles,'Name'),'Progress of Optimization');
-else
-    IdxHandle = [];
-end
-
-if any(IdxHandle)
-    figOpt = figHandles(IdxHandle);
-    AxesInfigOpt = findall(figOpt,'type','axes');
-    set(AxesInfigOpt,'NextPlot', 'replacechildren')
-    children = get(AxesInfigOpt,'children');
-    delete(children);
-else
-    figOpt = figure('Name','Progress of Optimization','NumberTitle','off','Color',[.5 .5 .5]);
-    hold on, grid on, grid minor,
-    AxesInfigOpt = findall(figOpt,'type','axes');
-end
-% ensure to bring optimization window to front also for a re-optimization 
-if isdeployed
-    figure(figOpt);
-end 
-defaultFontSize = 14;
-set(AxesInfigOpt,'YScale','log');
-title(AxesInfigOpt,'Progress of Optimization','LineWidth',defaultFontSize),
-xlabel(AxesInfigOpt,'# iterations','Fontsize',defaultFontSize),ylabel(AxesInfigOpt,'objective function value','Fontsize',defaultFontSize)
-
-% draw updated axes
-plot(AxesInfigOpt,0:1:iter,matRad_objective_function_value,'xb','LineWidth',1.5);
-drawnow
+% % plot objective function output
+% figHandles = get(0,'Children');
+% if ~isempty(figHandles)
+%     IdxHandle = strcmp(get(figHandles,'Name'),'Progress of Optimization');
+% else
+%     IdxHandle = [];
+% end
+%
+% if any(IdxHandle)
+%     figOpt = figHandles(IdxHandle);
+%     AxesInfigOpt = findall(figOpt,'type','axes');
+%     set(AxesInfigOpt,'NextPlot', 'replacechildren')
+%     children = get(AxesInfigOpt,'children');
+%     delete(children);
+% else
+%     figOpt = figure('Name','Progress of Optimization','NumberTitle','off','Color',[.5 .5 .5]);
+%     hold on, grid on, grid minor,
+%     AxesInfigOpt = findall(figOpt,'type','axes');
+% end
+% % ensure to bring optimization window to front also for a re-optimization
+% if isdeployed
+%     figure(figOpt);
+% end
+% defaultFontSize = 14;
+% set(AxesInfigOpt,'YScale','log');
+% title(AxesInfigOpt,'Progress of Optimization','LineWidth',defaultFontSize),
+% xlabel(AxesInfigOpt,'# iterations','Fontsize',defaultFontSize),ylabel(AxesInfigOpt,'objective function value','Fontsize',defaultFontSize)
+%
+% % draw updated axes
+% plot(AxesInfigOpt,0:1:iter,matRad_objective_function_value,'xb','LineWidth',1.5);
+% drawnow
 
 end

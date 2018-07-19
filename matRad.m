@@ -4,13 +4,13 @@
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% Copyright 2015 the matRad development team. 
-% 
-% This file is part of the matRad project. It is subject to the license 
-% terms in the LICENSE file found in the top-level directory of this 
-% distribution and at https://github.com/e0404/matRad/LICENSES.txt. No part 
-% of the matRad project, including this file, may be copied, modified, 
-% propagated, or distributed except according to the terms contained in the 
+% Copyright 2015 the matRad development team.
+%
+% This file is part of the matRad project. It is subject to the license
+% terms in the LICENSE file found in the top-level directory of this
+% distribution and at https://github.com/e0404/matRad/LICENSES.txt. No part
+% of the matRad project, including this file, may be copied, modified,
+% propagated, or distributed except according to the terms contained in the
 % LICENSE file.
 %
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -37,7 +37,7 @@ pln.numOfFractions  = 30;
 % beam geometry settings
 pln.propStf.bixelWidth      = 5; % [mm] / also corresponds to lateral spot spacing for particles
 pln.propStf.gantryAngles    = [0:72:359]; % [?]
-pln.propStf.couchAngles     = [0 0 0 0 0]; % [?]
+pln.propStf.couchAngles     = zeros(size(pln.propStf.gantryAngles)); % [?]
 pln.propStf.numOfBeams      = numel(pln.propStf.gantryAngles);
 pln.propStf.isoCenter       = ones(pln.propStf.numOfBeams,1) * matRad_getIsoCenter(cst,ct,0);
 
@@ -48,8 +48,8 @@ pln.propOpt.bioOptimization = 'none'; % none: physical optimization;            
 pln.propOpt.runDAO          = false;  % 1/true: run DAO, 0/false: don't / will be ignored for particles
 pln.propOpt.runSequencing   = false;  % 1/true: run sequencing, 0/false: don't / will be ignored for particles and also triggered by runDAO below
 
-%% initial visualization and change objective function settings if desired
-matRadGUI
+% %% initial visualization and change objective function settings if desired
+% matRadGUI
 
 %% generate steering file
 stf = matRad_generateStf(ct,cst,pln);
@@ -63,24 +63,23 @@ elseif strcmp(pln.radiationMode,'protons') || strcmp(pln.radiationMode,'carbon')
 end
 
 %% inverse planning for imrt
-resultGUI = matRad_fluenceOptimization(dij,cst,pln);
+[resultGUI, info] = matRad_fluenceOptimization(dij,cst,pln);
 
-%% sequencing
-if strcmp(pln.radiationMode,'photons') && (pln.propertiesOpt.runSequencing || pln.propertiesOpt.runDAO)
-    %resultGUI = matRad_xiaLeafSequencing(resultGUI,stf,dij,5);
-    %resultGUI = matRad_engelLeafSequencing(resultGUI,stf,dij,5);
-    resultGUI = matRad_siochiLeafSequencing(resultGUI,stf,dij,5);
-end
-
-%% DAO
-if strcmp(pln.radiationMode,'photons') && pln.propertiesOpt.runDAO
-   resultGUI = matRad_directApertureOptimization(dij,cst,resultGUI.apertureInfo,resultGUI,pln);
-   matRad_visApertureInfo(resultGUI.apertureInfo);
-end
-
-%% start gui for visualization of result
-matRadGUI
-
-%% indicator calculation and show DVH and QI
-[dvh,qi] = matRad_indicatorWrapper(cst,pln,resultGUI);
-
+% %% sequencing
+% if strcmp(pln.radiationMode,'photons') && (pln.propertiesOpt.runSequencing || pln.propertiesOpt.runDAO)
+%     %resultGUI = matRad_xiaLeafSequencing(resultGUI,stf,dij,5);
+%     %resultGUI = matRad_engelLeafSequencing(resultGUI,stf,dij,5);
+%     resultGUI = matRad_siochiLeafSequencing(resultGUI,stf,dij,5);
+% end
+%
+% %% DAO
+% if strcmp(pln.radiationMode,'photons') && pln.propertiesOpt.runDAO
+%    resultGUI = matRad_directApertureOptimization(dij,cst,resultGUI.apertureInfo,resultGUI,pln);
+%    matRad_visApertureInfo(resultGUI.apertureInfo);
+% end
+%
+% %% start gui for visualization of result
+% matRadGUI
+%
+% %% indicator calculation and show DVH and QI
+% [dvh,qi] = matRad_indicatorWrapper(cst,pln,resultGUI);
