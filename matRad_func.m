@@ -15,14 +15,20 @@
 %
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-clear
+% clear
 % close all
 % clc
 
+function f = matRad(gantryAngles, fname)
+
+if nargin < 2
+  fname = 'TG119.mat';
+end
 % load patient data, i.e. ct, voi, cst
 
+load(fname);
 %load HEAD_AND_NECK
-load TG119.mat
+%load TG119.mat
 %load PROSTATE.mat
 %load LIVER.mat
 %load BOXPHANTOM.mat
@@ -36,7 +42,7 @@ pln.numOfFractions  = 30;
 
 % beam geometry settings
 pln.propStf.bixelWidth      = 5; % [mm] / also corresponds to lateral spot spacing for particles
-pln.propStf.gantryAngles    = [0:72:359]; %[0:72:359]; % [?]
+pln.propStf.gantryAngles    = gantryAngles; %[0:72:359]; % [?]
 pln.propStf.couchAngles     = zeros(size(pln.propStf.gantryAngles)); % [?]
 pln.propStf.numOfBeams      = numel(pln.propStf.gantryAngles);
 pln.propStf.isoCenter       = ones(pln.propStf.numOfBeams,1) * matRad_getIsoCenter(cst,ct,0);
@@ -63,7 +69,8 @@ elseif strcmp(pln.radiationMode,'protons') || strcmp(pln.radiationMode,'carbon')
 end
 
 %% inverse planning for imrt
-[resultGUI, info, funcs] = matRad_fluenceOptimization(dij,cst,pln);
+[resultGUI, info] = matRad_fluenceOptimization(dij,cst,pln);
+f = info.f;
 
 % %% sequencing
 % if strcmp(pln.radiationMode,'photons') && (pln.propertiesOpt.runSequencing || pln.propertiesOpt.runDAO)
